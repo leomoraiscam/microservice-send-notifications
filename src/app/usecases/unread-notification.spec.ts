@@ -1,4 +1,4 @@
-import { InMemoryNotificationsRepository } from '../../../tests/repositories/in-memory-notifications-repository';
+import { InMemoryNotificationsRepository } from '@app/repositories/in-memory/In-memory-notifications-repository';
 import { UnreadNotification } from './unread-notification';
 import { NotificationNotFound } from './errors/notification-not-found';
 import { makeNotification } from '../../../tests/factories/notification-factory';
