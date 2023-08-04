@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { SendNotification } from '@app/usecases/send-notification';
 import { CreateNotificationBody } from '../dtos/create-notification-body';
 import { NotificationViewModelMapper } from '../view-models-mapper/notification-view-model-mapper';
@@ -11,6 +11,7 @@ export class NotificationsController {
     private sendNotification: SendNotification,
     private countRecipientNotifications: CountRecipientNotification,
     private getRecipientNotifications: GetRecipientNotifications,
+    private readNotification: ReadNotification,
   ) {}
 
   @Get('count/from/:recipientId')
@@ -33,6 +34,13 @@ export class NotificationsController {
     return {
       notifications: notifications.map(NotificationViewModelMapper.toHTTP),
     };
+  }
+
+  @Patch(':id/read')
+  async read(@Param('id') id: string) {
+    await this.readNotification.execute({
+      notificationId: id,
+    });
   }
 
   @Post()
