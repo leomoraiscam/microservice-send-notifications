@@ -4,6 +4,8 @@ import { CreateNotificationBody } from '../dtos/create-notification-body';
 import { NotificationViewModelMapper } from '../view-models-mapper/notification-view-model-mapper';
 import { CountRecipientNotification } from '@app/usecases/count-recipient-notifications';
 import { GetRecipientNotifications } from '@app/usecases/get-recipients-notifications';
+import { ReadNotification } from '@app/usecases/read-notification';
+import { UnreadNotification } from '@app/usecases/unread-notification';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -12,6 +14,7 @@ export class NotificationsController {
     private countRecipientNotifications: CountRecipientNotification,
     private getRecipientNotifications: GetRecipientNotifications,
     private readNotification: ReadNotification,
+    private unreadNotification: UnreadNotification,
   ) {}
 
   @Get('count/from/:recipientId')
@@ -39,6 +42,13 @@ export class NotificationsController {
   @Patch(':id/read')
   async read(@Param('id') id: string) {
     await this.readNotification.execute({
+      notificationId: id,
+    });
+  }
+
+  @Patch(':id/unread')
+  async unread(@Param('id') id: string) {
+    await this.unreadNotification.execute({
       notificationId: id,
     });
   }
