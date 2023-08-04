@@ -6,6 +6,7 @@ import { CountRecipientNotification } from '@app/usecases/count-recipient-notifi
 import { GetRecipientNotifications } from '@app/usecases/get-recipients-notifications';
 import { ReadNotification } from '@app/usecases/read-notification';
 import { UnreadNotification } from '@app/usecases/unread-notification';
+import { CancelNotification } from '@app/usecases/cancel-notification';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -15,6 +16,7 @@ export class NotificationsController {
     private getRecipientNotifications: GetRecipientNotifications,
     private readNotification: ReadNotification,
     private unreadNotification: UnreadNotification,
+    private cancelNotification: CancelNotification,
   ) {}
 
   @Get('count/from/:recipientId')
@@ -64,5 +66,12 @@ export class NotificationsController {
     });
 
     return { notification: NotificationViewModelMapper.toHTTP(notification) };
+  }
+
+  @Patch(':id/cancel')
+  async cancel(@Param('id') id: string) {
+    await this.cancelNotification.execute({
+      notificationId: id,
+    });
   }
 }
