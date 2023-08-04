@@ -3,12 +3,14 @@ import { SendNotification } from '@app/usecases/send-notification';
 import { CreateNotificationBody } from '../dtos/create-notification-body';
 import { NotificationViewModelMapper } from '../view-models-mapper/notification-view-model-mapper';
 import { CountRecipientNotification } from '@app/usecases/count-recipient-notifications';
+import { GetRecipientNotifications } from '@app/usecases/get-recipients-notifications';
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(
     private sendNotification: SendNotification,
     private countRecipientNotifications: CountRecipientNotification,
+    private getRecipientNotifications: GetRecipientNotifications,
   ) {}
 
   @Get('count/from/:recipientId')
@@ -19,6 +21,17 @@ export class NotificationsController {
 
     return {
       count,
+    };
+  }
+
+  @Get('from/:recipientId')
+  async getFromRecipient(@Param('recipientId') recipientId: string) {
+    const { notifications } = await this.getRecipientNotifications.execute({
+      recipientId,
+    });
+
+    return {
+      notifications: notifications.map(NotificationViewModelMapper.toHTTP),
     };
   }
 
